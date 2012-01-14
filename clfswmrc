@@ -1,0 +1,106 @@
+(in-package :clfswm)
+
+;; thanks to this fellow https://github.com/alesguzik/home/blob/master/.clfswmrc
+
+(load-contrib "volume-mode.lisp")
+(load-contrib "amixer.lisp")
+ 
+(defun eval-in-frame (frame fun &optional (at 0) till)
+  (let ((old-current-child *current-child*))
+    (add-timer at
+               (lambda ()
+                 (setf *current-child* frame)
+                 (show-all-children)
+                 (funcall fun)
+                 ))
+    (when till
+      (add-timer till
+                 (lambda ()
+                   (setf *current-child* old-current-child))))
+  (values)))
+
+(defun shell-in-frame (frame cmd &optional (at 0) till)
+  (eval-in-frame frame (lambda () (do-shell cmd)) at till))
+
+(defun execute-in-frame (frame cmd args &optional (at 0) till)
+  (eval-in-frame frame (lambda () (do-execute cmd args)) at till))
+
+(defun my-init-hook ()
+  (dbg 'my-init-hook)
+  (setf (frame-layout *root-frame*) #'tile-space-layout
+        (frame-data-slot *root-frame* :tile-space-size) 0.05
+        (frame-data-slot *root-frame* :tile-layout-keep-position) :yes)
+  (let* (
+         (terms-frame (add-frame
+                                (create-frame
+                                 :name "Terms"
+                                 :layout #'tile-layout-mix
+                                 :data (list '(:tile-layout-keep-position :yes)))
+                                *root-frame*))
+;;         (mail-frame (add-frame (create-frame :name "Mail"
+;;                                              :layout #'maximize-layout)
+;;                                communications-frame))
+         (web-frame (add-frame (create-frame
+                                 :name "Web"
+                                 :layout #'maximize-layout
+                                 :data (list '(:tile-layout-keep-position :yes)
+                                             '(:tile-space-size 0.05)))
+                                *root-frame*))
+         (learn-frame (add-frame (create-frame
+                                  :name "Learn"
+                                  :layout #'maximize-layout)
+                                 *root-frame*))
+         (code-frame (add-frame (create-frame
+                                 :name "Code"
+                                 :layout #'main-window-left-layout
+                                 :data (list '(:tile-size 0.2)))
+                                *root-frame*))
+         )
+    (shell-in-frame web-frame "firefox" 1)
+    (shell-in-frame terms-frame "urxvt -e tmux" 5)))
+
+(setf *init-hook* '(my-init-hook))
+
+(defun start-emacs ()
+  "start emacs instance"
+  (run-or-raise (lambda (win) (string-equal "emacs"
+                                            (xlib:get-wm-class win)))
+                (lambda () (do-shell "cd $HOME && exec emacsclient -c"))))
+
+(defun start-firefox ()
+  "start firefox"
+  (run-or-raise (lambda (win) (string-equal "Firefox"
+                                            (xlib:get-wm-class win)))
+                (lambda () (do-shell "cd $HOME && exec firefox"))))
+
+(defun start-urxvt ()
+  "start urxvt with tmux"
+  (run-or-raise (lambda (win) (string-equal "urxvt"
+                                           (xlib:get-wm-class win)))
+                (lambda () (do-shell "cd $HOME && exec urxvt -e tmux"))))
+       
+(defmacro make-mod-1-main-binding (key fn)
+  `(define-main-key (,key :mod-1) ,fn))
+
+(defmacro make-mod-1-main-bindings (&rest keys)
+  (let ((ks (mapcar #'(lambda (k) (cons 'make-mod-1-main-binding k)) keys)))
+    `(progn ,@ks)))
+
+(defmacro make-mod-4-main-binding (key fn)
+  `(define-main-key (,key :mod-1) ,fn))
+
+(defmacro make-mod-4-main-bindings (&rest keys)
+  (let ((ks (mapcar #'(lambda (k) (cons 'make-mod-4-main-binding k)) keys)))
+    `(progn ,@ks)))
+
+(defun set-some-keys ()
+  (make-mod-1-main-bindings
+   ("f" 'start-emacs)
+   ("l" 'expose-all-windows-mode)
+   ("u" 'expose-windows-mode))
+  (make-mod-4-main-bindings
+   ("w" 'start-firefox)
+   ("Return" 'start-urxvt)))
+
+(add-hook *binding-hook* 'set-some-keys)
+
