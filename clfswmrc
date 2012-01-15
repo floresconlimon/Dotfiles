@@ -93,25 +93,24 @@
 
 ;; very uncool better make a macro or wrapper function
 
-(defun start-emacs ()
-  "start emacs instance"
-  (run-or-raise (lambda (win) (string-equal "emacs"
-                                            (xlib:get-wm-class win)))
-                (lambda () (do-shell "cd $HOME && exec emacsclient -c"))))
+(defmacro add-my-run-or-raise-fn (name class cmd)
+  "make a run-or-raise-fn"
+  `(defun ,name ()
+     (run-or-raise (lambda (win) (string-equal ,class
+                                               (xlib:get-wm-class win)))
+                   (lambda () (do-shell ,cmd)))))
 
-(defun start-firefox ()
-  "start firefox"
-  (run-or-raise (lambda (win) (string-equal "Navigator"
-                                            (xlib:get-wm-class win)))
-                (lambda () (do-shell "cd $HOME && exec firefox"))))
+(defmacro add-my-run-or-raise-fns (&rest rors)
+  "make run-or-raise fns, basically saves typing"
+  (let ((rs (mapcar #'(lambda (r) (cons 'add-my-run-or-raise-fn r)) rors)))
+    `(progn ,@rs)))
 
-(defun start-urxvt ()
-  "start urxvt with tmux"
-  (run-or-raise (lambda (win) (string-equal "urxvt"
-                                           (xlib:get-wm-class win)))
-                (lambda () (do-shell "cd $HOME && exec urxvt -e tmux"))))
-      
-;;;; seems to work well
+(add-my-run-or-raise-fns
+ (start-emacs "emacs" "cd $HOME && exec emacsclient -c")
+ (start-firefox "Navigator" "cd $HOME && exec firefox")
+ (start-urxvt "urxvt" "cd $HOME && exec urxvt")
+ (start-qbittorrent "qbittorrent" "exec qbittorrent")
+ (start-gogglesmm "gogglesmm" "gogglesmm"))
 
 (defmacro defkey-main (keys fn)
   `(define-main-key ,keys ,fn))
