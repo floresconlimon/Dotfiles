@@ -1,3 +1,4 @@
+;;; -*- lisp -*-
 (in-package :clfswm)
 
 ;; thanks to this fellow https://github.com/alesguzik/home/blob/master/.clfswmrc
@@ -5,6 +6,7 @@
 (load-contrib "volume-mode.lisp")
 (load-contrib "amixer.lisp")
 
+(setf *volume-mode-timeout* 1)
 ;; completely stolen
  (defun eval-in-frame (frame fun &optional (at 0) till)
   (let ((old-current-child *current-child*))
@@ -27,6 +29,26 @@
 ;;completely stolen
 (defun execute-in-frame (frame cmd args &optional (at 0) till)
   (eval-in-frame frame (lambda () (do-execute cmd args)) at till))
+
+;; frame hooks
+(defmacro create-my-named-frame-nw-hook (name class)
+  "make a frame hook function"
+  `(defun ,name (&optional (frame *current-child*))
+     (when (frame-p frame)
+       (setf (frame-nw-hook frame) 'absorb-window-nw-hook
+             (frame-data-slot frame :nw-absorb-test) (nw-absorb-test-class ,class)))))
+
+(defmacro create-my-named-frame-nw-hooks (&rest hooks)
+  "make frame hooks, basically saves typing"
+  (let ((hs (mapcar #'(lambda (h) (cons 'create-my-named-frame-nw-hook h)) hooks)))
+    `(progn ,@hs)))
+
+(create-my-named-frame-nw-hooks
+  (firefox-my-frame-nw-hook "Navigator")
+  (emacs-my-frame-nw-hook "emacs")
+  (urxvt-my-frame-nw-hook "urxvt")
+  (urxvt2-my-frame-nw-hook "URxvt"))
+  
 
 ;;mainly stolen, not sure if this way to autostart things is a good idea
 (defun my-init-hook ()
@@ -60,6 +82,10 @@
                                  :data (list '(:tile-size 0.2)))
                                 *root-frame*))
          )
+    (emacs-my-frame-nw-hook code-frame)
+    (firefox-my-frame-nw-hook web-frame)
+    (urxvt-my-frame-nw-hook terms-frame)
+    (urxvt2-my-frame-nw-hook terms-frame)
     (shell-in-frame web-frame "firefox" 1)
     (shell-in-frame terms-frame "urxvt -e tmux" 5)))
 
@@ -85,7 +111,7 @@
                                            (xlib:get-wm-class win)))
                 (lambda () (do-shell "cd $HOME && exec urxvt -e tmux"))))
       
-;; seems to work well
+;;;; seems to work well
 
 (defmacro defkey-main (keys fn)
   `(define-main-key ,keys ,fn))
