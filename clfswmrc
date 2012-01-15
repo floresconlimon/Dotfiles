@@ -4,8 +4,9 @@
 
 (load-contrib "volume-mode.lisp")
 (load-contrib "amixer.lisp")
- 
-(defun eval-in-frame (frame fun &optional (at 0) till)
+
+;; completely stolen
+ (defun eval-in-frame (frame fun &optional (at 0) till)
   (let ((old-current-child *current-child*))
     (add-timer at
                (lambda ()
@@ -19,12 +20,15 @@
                    (setf *current-child* old-current-child))))
   (values)))
 
+;;completely stolen
 (defun shell-in-frame (frame cmd &optional (at 0) till)
   (eval-in-frame frame (lambda () (do-shell cmd)) at till))
 
+;;completely stolen
 (defun execute-in-frame (frame cmd args &optional (at 0) till)
   (eval-in-frame frame (lambda () (do-execute cmd args)) at till))
 
+;;mainly stolen, not sure if this way to autostart things is a good idea
 (defun my-init-hook ()
   (dbg 'my-init-hook)
   (setf (frame-layout *root-frame*) #'tile-space-layout
@@ -61,6 +65,8 @@
 
 (setf *init-hook* '(my-init-hook))
 
+;; very uncool better make a macro or wrapper function
+
 (defun start-emacs ()
   "start emacs instance"
   (run-or-raise (lambda (win) (string-equal "emacs"
@@ -79,6 +85,8 @@
                                            (xlib:get-wm-class win)))
                 (lambda () (do-shell "cd $HOME && exec urxvt -e tmux"))))
       
+;; seems to work well
+
 (defmacro defkey-main (keys fn)
   `(define-main-key ,keys ,fn))
 
