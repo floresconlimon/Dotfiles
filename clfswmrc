@@ -69,7 +69,7 @@
 
 (defun start-firefox ()
   "start firefox"
-  (run-or-raise (lambda (win) (string-equal "Firefox"
+  (run-or-raise (lambda (win) (string-equal "Navigator"
                                             (xlib:get-wm-class win)))
                 (lambda () (do-shell "cd $HOME && exec firefox"))))
 
@@ -78,29 +78,21 @@
   (run-or-raise (lambda (win) (string-equal "urxvt"
                                            (xlib:get-wm-class win)))
                 (lambda () (do-shell "cd $HOME && exec urxvt -e tmux"))))
-       
-(defmacro make-mod-1-main-binding (key fn)
-  `(define-main-key (,key :mod-1) ,fn))
+      
+(defmacro defkey-main (keys fn)
+  `(define-main-key ,keys ,fn))
 
-(defmacro make-mod-1-main-bindings (&rest keys)
-  (let ((ks (mapcar #'(lambda (k) (cons 'make-mod-1-main-binding k)) keys)))
+(defmacro defkeys-main (&rest keys)
+  (let ((ks (mapcar #'(lambda (k) (cons 'defkey-main k)) keys)))
     `(progn ,@ks)))
-
-(defmacro make-mod-4-main-binding (key fn)
-  `(define-main-key (,key :mod-1) ,fn))
-
-(defmacro make-mod-4-main-bindings (&rest keys)
-  (let ((ks (mapcar #'(lambda (k) (cons 'make-mod-4-main-binding k)) keys)))
-    `(progn ,@ks)))
-
+ 
 (defun set-some-keys ()
-  (make-mod-1-main-bindings
-   ("f" 'start-emacs)
-   ("l" 'expose-all-windows-mode)
-   ("u" 'expose-windows-mode))
-  (make-mod-4-main-bindings
-   ("w" 'start-firefox)
-   ("Return" 'start-urxvt)))
+  (defkeys-main
+    (("f" :mod-1) 'start-emacs)
+    (("l" :mod-1) 'expose-all-windows-mode)
+    (("u" :mod-1) 'expose-windows-mode)
+    (("w" :mod-4) 'start-firefox)
+    (("Return" :mod-4) 'start-urxvt)))
 
 (add-hook *binding-hook* 'set-some-keys)
 
