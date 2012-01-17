@@ -112,20 +112,44 @@
  (start-qbittorrent "qbittorrent" "exec qbittorrent")
  (start-gogglesmm "gogglesmm" "gogglesmm"))
 
-(defmacro defkey-main (keys fn)
-  `(define-main-key ,keys ,fn))
+;; (defmacro defkey-main (keys fn)
+;;   `(define-main-key ,keys ,fn))
 
-(defmacro defkeys-main (&rest keys)
-  (let ((ks (mapcar #'(lambda (k) (cons 'defkey-main k)) keys)))
-    `(progn ,@ks)))
+;; (defmacro defkeys-main (&rest keys)
+;;   (let ((ks (mapcar #'(lambda (k) (cons 'defkey-main k)) keys)))
+;;     `(progn ,@ks)))
  
+;; (defmacro defkey-second (keys fn)
+;;   `(define-second-key ,keys ,fn))
+
+;; (defmacro defkeys-second (&rest keys)
+;;   (let ((ks (mapcar #'(lambda (k) (cons 'defkey-second k)) keys)))
+;;     `(progn ,@ks)))
+
+;; (defmacro defkeys ((mode) &body keys)
+;;  (let ((symb (intern (format nil "DEFINE-~A-KEY" mode))))
+;;    `(progn
+;;       ,@(loop for k in keys collect `(,symb ,@k)))))
+
+;;thanks to Philipp Brochard
 (defun set-some-keys ()
-  (defkeys-main
-    (("f" :mod-1) 'start-emacs)
-    (("l" :mod-1) 'expose-all-windows-mode)
-    (("u" :mod-1) 'expose-windows-mode)
-    (("w" :mod-4) 'start-firefox)
-    (("Return" :mod-4) 'start-urxvt)))
+ (defkeys (main)
+   (("f" :mod-1) 'start-emacs)
+   (("l" :mod-1) 'expose-all-windows-mode)
+   (("u" :mod-1) 'expose-windows-mode)
+   (("w" :mod-4) 'start-firefox)
+   (("Return" :mod-4) 'start-urxvt)))
+
+;;(defun set-some-keys ()
+;;  (defkeys-main
+;;    (("f" :mod-1) 'start-emacs)
+;; (("l" :mod-1) 'expose-all-windows-mode)
+;; (("u" :mod-1) 'expose-windows-mode)
+;; (("w" :mod-4) 'start-firefox)
+;; (("Return" :mod-4) 'start-urxvt)
+;; (("2" :mod-4) 'start-gogglesmm)
+;;  (defkeys-second
+;;    (("g") 'sm-ask-close/kill-current-window)
 
 (add-hook *binding-hook* 'set-some-keys)
 
