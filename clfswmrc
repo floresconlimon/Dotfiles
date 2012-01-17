@@ -126,10 +126,10 @@
 ;;   (let ((ks (mapcar #'(lambda (k) (cons 'defkey-second k)) keys)))
 ;;     `(progn ,@ks)))
 
-;; (defmacro defkeys ((mode) &body keys)
-;;  (let ((symb (intern (format nil "DEFINE-~A-KEY" mode))))
-;;    `(progn
-;;       ,@(loop for k in keys collect `(,symb ,@k)))))
+(defmacro defkeys ((mode) &body keys)
+  (let ((symb (intern (format nil "DEFINE-~A-KEY" mode))))
+    `(progn
+       ,@(loop for k in keys collect `(,symb ,@k)))))
 
 ;;thanks to Philipp Brochard
 (defun set-some-keys ()
@@ -138,6 +138,7 @@
    (("l" :mod-1) 'expose-all-windows-mode)
    (("u" :mod-1) 'expose-windows-mode)
    (("w" :mod-4) 'start-firefox)
+   (("2" :mod-4) 'start-gogglesmm)
    (("Return" :mod-4) 'start-urxvt)))
 
 ;;(defun set-some-keys ()
