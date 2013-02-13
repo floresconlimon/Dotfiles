@@ -1,0 +1,10 @@
+remove mod1 = Alt_L
+keycode 64 = Control_L
+remove mod4 = Super_L
+remove mod5 = ISO_Level3_Shift
+keycode 133 = Alt_L
+keycode 135 = Alt_R
+keycode 108 = Control_R
+add control = Control_L Control_R
+add mod1 = Alt_L Alt_R
+keycode 66 = Escape
