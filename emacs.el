@@ -1,4 +1,5 @@
-(add-to-list 'custom-theme-load-path "~/.emacs.d/themes/")
+(load-file "~/code/emacs.d/emacs-color-theme-solarized/color-theme-solarized.el")
+;;(color-theme-solarized-light)
 ;;(load-theme 'zenburn)
 
 ;; so left clicks open the file in the same window in dired
@@ -36,12 +37,12 @@
 
 ;;(require 'eap-autoloads)
 
-(add-to-list 'load-path "~/code/emacs.d/egg/")
-(require 'egg)
+;;(add-to-list 'load-path "~/code/emacs.d/egg/")
+;;(require 'egg)
 
 (add-to-list 'load-path "~/code/emacs.d/auctex-11.87/")
 (load "auctex.el" nil t t)
-(load "preview-latex.el" nil t t)
+;;(load "preview-latex.el" nil t t)
 ;; New method introduced in AUCTeX 11.86:
 (setq TeX-view-program-list '(("Okular" "okular %o")))
 (setq TeX-view-program-selection '((output-pdf "Okular")))
@@ -58,7 +59,8 @@
  "key translates"
   (interactive)
   (progn
-    (load-theme 'zenburn)
+;;    (load-theme 'zenburn)
+    (color-theme-solarized-light)
     (mykeytranslates)))
 
 (defun mykeytranslates ()
@@ -96,27 +98,33 @@
                            "~/code/emacs.d/yasnippet/snippets"))
 (mapc 'yas/load-directory yas/root-directory)
 
+(package-initialize)
+;;(elpy-enable)
+(require 'package)
+(add-to-list 'package-archives
+             '("melpa" . "http://melpa.milkbox.net/packages/") t)
 
+(require 'magit)
 
-(add-to-list 'load-path "~/code/emacs.d/auto-complete")
-(require 'auto-complete-config)
-(add-to-list 'ac-dictionary-directories "/home/veel/code/emacs.d/auto-complete/dict")
-(ac-config-default)
-(setq ac-use-menu-map t)
-(ac-set-trigger-key "TAB")
-(define-key ac-mode-map (kbd "TAB") 'auto-complete)
-(define-key ac-menu-map (kbd "C-n") 'ac-next)
-(define-key ac-menu-map (kbd "C-p") 'ac-previous)
-(add-to-list 'ac-sources ac-source-yasnippet)
-(define-key ac-complete-mode-map (kbd "RET") nil)
+;; (add-to-list 'load-path "~/code/emacs.d/auto-complete")
+;; (require 'auto-complete-config)
+;; (add-to-list 'ac-dictionary-directories "/home/veel/code/emacs.d/auto-complete/dict")
+;; (ac-config-default)
+;; (setq ac-use-menu-map t)
+;; (ac-set-trigger-key "TAB")
+;; (define-key ac-mode-map (kbd "TAB") 'auto-complete)
+;; (define-key ac-menu-map (kbd "C-n") 'ac-next)
+;; (define-key ac-menu-map (kbd "C-p") 'ac-previous)
+;; (add-to-list 'ac-sources ac-source-yasnippet)
+;; (define-key ac-complete-mode-map (kbd "RET") nil)
 
-;; dirty fix for having AC everywhere
-(define-globalized-minor-mode real-global-auto-complete-mode
-  auto-complete-mode (lambda ()
-                       (if (not (minibufferp (current-buffer)))
-                         (auto-complete-mode 1))
-                       ))
-(real-global-auto-complete-mode t)
+;; ;; dirty fix for having AC everywhere
+;; (define-globalized-minor-mode real-global-auto-complete-mode
+;;   auto-complete-mode (lambda ()
+;;                        (if (not (minibufferp (current-buffer)))
+;;                          (auto-complete-mode 1))
+;;                        ))
+;; (real-global-auto-complete-mode t)
 
 ;;flycheck
 ;;(add-to-list 'load-path "~/code/emacs.d/flycheck/")
@@ -128,7 +136,7 @@
 (slime-setup)
 (slime-setup '(slime-fancy))
 
-(load (expand-file-name "~/quicklisp/slime-helper.el"))
+;;(load (expand-file-name "~/quicklisp/slime-helper.el"))
   ;; Replace "sbcl" with the path to your implementation
 (setq inferior-lisp-program "sbcl")
 
@@ -150,8 +158,8 @@
 ;;(add-hook '-mode-hook 'rainbow-delimiters-mode)
 
 ;; mu4e
-(load-file "~/code/emacs.d/mu4econf.el")
-(setq mail-user-agent 'mu4e-user-agent)
+;;(load-file "~/code/emacs.d/mu4econf.el")
+;;(setq mail-user-agent 'mu4e-user-agent)
 
 ;;(load-file "~/code/emacs.d/dired-details.el")
 ;;(require 'dired-details)
@@ -177,6 +185,11 @@
 (global-set-key (kbd "C-x C-r") 'helm-recentf)
 
 ;; (add-to-list 'load-path "~/code/emacs.d/strokes.el")
+
+;; Android mode
+;;(add-to-list 'load-path "~/code/emacs.d/android-mode")
+;;(require 'android-mode)
+;;(custom-set-variables '(android-mode-sdk-dir "~/code/builds/android-sdk-linux"))
 
 ;;Variables;; variables
 (defalias 'yes-or-no-p 'y-or-n-p)
@@ -211,9 +224,9 @@
 
 (setq auto-mode-alist (cons '("\\.m$" . octave-mode) auto-mode-alist))
 
-;; (autoload 'wl "wl" "Wanderlust" t)
-;; (autoload 'wl-other-frame "wl" "Wanderlust on new frame." t)
-;; (autoload 'wl-draft "wl-draft" "Write draft with Wanderlust." t)
+(autoload 'wl "wl" "Wanderlust" t)
+(autoload 'wl-other-frame "wl" "Wanderlust on new frame." t)
+(autoload 'wl-draft "wl-draft" "Write draft with Wanderlust." t)
 
 ;; (add-to-list 'load-path "~/code/emacs.d/anything-config/")
 ;; (require 'anything-config)
@@ -245,6 +258,9 @@
 ;;(add-hook 'lisp-mode-hook 'rainbow-delimiters-mode 1)
 ;;(add-hook 'elisp-mode-hook 'rainbow-delimiters-mode 1)
 
+(add-to-list 'load-path "~/code/emacs.d/autopair/")
+(require 'autopair)
+
 (add-to-list 'load-path "~/code/emacs.d/evil")
 (require 'evil)
 (setcdr evil-insert-state-map nil)
@@ -275,7 +291,7 @@
 (add-to-list 'load-path "~/code/emacs.d/gimme-cat/gimme-cat.el")
 (winner-mode 1)
 
-(require 'w3m-load)
+;;(require 'w3m-load)
 
 ;;(add-to-list 'load-path "~/code/emacs.d/isearch+.el")
 ;;(require 'isearch+)
@@ -296,6 +312,7 @@
  '(c-default-style (quote ((c-mode . "") (java-mode . "java") (awk-mode . "awk") (other . "gnu"))))
  '(custom-safe-themes (quote ("71b172ea4aad108801421cc5251edb6c792f3adbaecfa1c52e94e3d99634dee7" default)))
  '(dired-details-hidden-string "\"\"")
+ '(elpy-rpc-backend "jedi")
  '(erc-modules (quote (autojoin button completion fill irccontrols list match menu move-to-prompt netsplit networks noncommands readonly ring stamp track)))
  '(erc-nick "veelium")
  '(evil-esc-delay 0)
@@ -308,7 +325,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:family "DejaVu Sans Mono" :foundry "unknown" :slant normal :weight normal :height 90 :width normal))))
+ '(default ((t (:family "DejaVu Sans Mono" :foundry "unknown" :slant normal :weight normal :height 100 :width normal))))
  '(rainbow-delimiters-depth-1-face ((t (:foreground "navy" :weight bold)))))
 
 (define-key dired-mode-map (kbd "e") 'dired-previous-line)

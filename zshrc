@@ -8,9 +8,12 @@ setopt appendhistory autocd extendedglob nomatch
 unsetopt beep
 bindkey -e
 
+autoload -U promptinit
+promptinit
 autoload -U colors && colors
-#PROMPT='[%{$fg[green]%}%~%{$reset_color%}]'
-PS1="%B%{%F{green}%}[%{%F{yellow}%}%~%{%F{green}%}] %{%f%}%]%b"
+#PROMPT="[%{$fg[green]%}%~%{$reset_color%}]"
+
+#PROMPT="%~"
 autoload -Uz compinit
 compinit
 # End of lines added by compinstall
@@ -19,8 +22,8 @@ HISTFILE=~/.histfile
 HISTSIZE=1000
 SAVEHIST=1000
 # End of lines configured by zsh-newuser-install
-
 source /etc/profile
+PS1="%B%{%F{green}%}[%{%F{yellow}%}%~%{%F{green}%}] %{%f%}%]%b"
 
 alias ee='emacsclient -c'
 alias m="mplayer"
@@ -64,7 +67,9 @@ bindkey    "^[3;5~"         delete-char
 export TERM=screen-256color
 
 export PATH=/home/velius/code/bin:/home/velius/code/bin:/usr/lib/lightdm/lightdm:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games
-
+export PATH=/home/velius/code/builds/android-sdk-linux/tools:$PATH
+export PATH=/home/velius/code/builds/genymotion:$PATH
+export PATH=/home/velius/code/builds/android-sdk-linux/platform-tools:$PATH
 alias df='df -h'
 alias shutup='sudo shutdown -h now'
 alias testping='ping -c3 www.startpage.com'
