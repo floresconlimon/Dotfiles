@@ -2,7 +2,7 @@
 
 zstyle ':completion:*' completer _complete _ignored
 zstyle ':completion:*' matcher-list 'm:{[:lower:]}={[:upper:]} r:|[._-]=** r:|=**' 'm:{[:lower:]}={[:upper:]} r:|[._-]=** r:|=**' 'm:{[:lower:]}={[:upper:]} r:|[._-]=** r:|=**'
-zstyle :compinstall filename '/home/velius/.zshrc'
+zstyle :compinstall filename '/home/veel/.zshrc'
 
 setopt appendhistory autocd extendedglob nomatch
 unsetopt beep
@@ -56,7 +56,7 @@ alias l='less'
 alias mm='mpg123 -C'
 
 # edit file with root privs
-alias es="SUDO_EDITOR=\"emacsclient -c -a emacs\" sudoedit"   
+alias es="SUDO_EDITOR=\"emacsclient -t -a emacs\" sudoedit"   
 #bindkey "$(echotc kl)" backward-char
 #bindkey "$(echotc kr)" forward-char
 #bindkey "$(echotc ku)" up-line-or-history
@@ -66,14 +66,12 @@ bindkey    "^[3;5~"         delete-char
 
 export TERM=screen-256color
 
-export PATH=/home/velius/code/bin:/home/velius/code/bin:/usr/lib/lightdm/lightdm:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games
-export PATH=/home/velius/code/builds/android-sdk-linux/tools:$PATH
-export PATH=/home/velius/code/builds/genymotion:$PATH
-export PATH=/home/velius/code/builds/android-sdk-linux/platform-tools:$PATH
+export PATH=/home/veel/code/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games
 alias df='df -h'
-alias shutup='sudo shutdown -h now'
+alias shutup='systemctl poweroff'
+alias susp='systemctl suspend'
 alias testping='ping -c3 www.startpage.com'
-alias sap='sudo apt-get'
+alias sy='sudo yum'
 alias mmk='make && sudo make clean install'
 alias hhtop='uxterm -e htop'
 alias sapi='sudo apt-get install'
