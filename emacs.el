@@ -2,6 +2,8 @@
 ;;(color-theme-solarized-light)
 ;;(load-theme 'zenburn)
 
+(load-file "~/code/emacs.d/cedet/cedet-devel-load.el")
+
 (package-initialize)
 ;;(elpy-enable)
 (require 'package)
@@ -145,6 +147,7 @@
 
 ;; magit
 (require 'magit)
+(global-set-key (kbd "C-x v v") 'magit-status)
 
 ;; (add-to-list 'load-path "~/code/emacs.d/auto-complete")
 (require 'auto-complete-config)
