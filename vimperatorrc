@@ -1,0 +1,21 @@
+noremap n j
+noremap j n
+noremap e k
+noremap N J
+noremap J N
+noremap E K
+noremap H l
+noremap l H
+noremap gT h
+noremap h gT
+noremap gt k
+noremap s d
+noremap d gt
+noremap k s
+noremap y o
+noremap o ;
+noremap ; y
+noremap Y O
+noremap O :
+noremap : Y
+
